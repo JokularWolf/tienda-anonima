@@ -2,31 +2,29 @@
 require_once (dirname(__DIR__) . '/persistencia/Conexion.php');
 require_once (dirname(__DIR__) . '/persistencia/CategoriaDAO.php');
 
-
 class Categoria{
     private $idCategoria;
     private $nombre;
 
-    public function getidCategoria(){
+    public function getIdCategoria() {
         return $this->idCategoria;
     }
 
-    public function getNombre(){
+    public function getNombre() {
         return $this->nombre;
     }
-    public function setidCategoria($idCategoria){
+    public function setIdProducto($idCategoria){
         $this->idCategoria = $idCategoria;
     }
     public function setNombre($nombre){
         $this->nombre = $nombre;
     }
 
-    public function __construct($idCategoria=0, $nombre="")
-    {
-        $this ->idCategoria = $idCategoria;
+    public function __construct($idCategoria=0, $nombre=""){
+        $this -> idCategoria = $idCategoria;
         $this -> nombre = $nombre;
     }
-
+    
 
     public function consultarCategoria(){
         //Consulta a la base de datos para obtener la marca por id
@@ -37,11 +35,10 @@ class Categoria{
         $conexion -> ejecutarConsulta($categoriaDAO -> consultarCategoria());
         while($registro = $conexion ->siguienteRegistro()){
             $categoria = new Categoria($registro[0], $registro[1]);
-            //Retorna un array de objetos de Marca
             array_push($categorias, $categoria);
         }
         $conexion -> cerrarConexion();
-        return $categorias;
+        return $categorias;        
     }
     
 }
