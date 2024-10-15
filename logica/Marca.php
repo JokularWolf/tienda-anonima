@@ -1,5 +1,4 @@
 <?php
-require_once (dirname(__DIR__) . '/persistencia/Conexion.php');
 require_once (dirname(__DIR__) . '/persistencia/MarcaDAO.php');
 require_once (dirname(__DIR__) . '/logica/Producto.php');
 class Marca{
