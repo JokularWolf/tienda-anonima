@@ -1,14 +1,22 @@
 <?php
+require_once ("./persistencia/Conexion.php");
+require ("./persistencia/AdministradorDAO.php");
+require ("./persistencia/ClienteDAO.php");
 
 class Persona{
-    private $idPersona;
-    private $nombre;
-    private $apellido;
-    private $correo;
-    private $clave;
+    protected $idPersona;
+    protected $estado;
+    protected $nombre;
+    protected $apellido;
+    protected $correo;
+    protected $clave;
 
     public function getIdPersona(){
         return $this->idPersona;
+    }
+
+    public function getEstado(){
+        return $this->estado;
     }
 
     public function getNombre(){
@@ -31,6 +39,10 @@ class Persona{
         $this->idPersona = $idPersona;
     }
 
+    public function setEstado($estado){
+        $this->estado = $estado;
+    }
+
     public function setNombre($nombre){
         $this->nombre = $nombre;
     }
@@ -47,8 +59,9 @@ class Persona{
         $this->clave = $clave;
     }
     
-    public function Persona($idPersona, $nombre, $apellido, $correo, $clave){
+    public function __construct($idPersona, $estado, $nombre, $apellido, $correo, $clave){
         $this -> idPersona = $idPersona;
+        $this -> estado = $estado;
         $this -> nombre = $nombre;
         $this -> apellido = $apellido;
         $this -> correo = $correo;

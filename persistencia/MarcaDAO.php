@@ -8,17 +8,16 @@ class MarcaDAO{
         $this -> nombre = $nombre;
     }
     
-    public function consultarMarca(){
+    public function consultarTodos(){
         return "select idMarca, nombre
                 from Marca
                 order by nombre asc";
     }
-
-    public function consultarProductosPorMarca($idMarca) {
-        return "SELECT p.nombre, p.cantidad, p.precioVenta
-                FROM producto p
-                JOIN marca m ON p.Marca_idMarca = m.idMarca
-                WHERE m.idMarca = $idMarca";
+    
+    public function consultar(){
+        return "select nombre 
+                from Marca
+                where idMarca = '" . $this -> idMarca . "'";
     }
 }
 

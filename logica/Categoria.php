@@ -1,6 +1,6 @@
 <?php
-require_once (dirname(__DIR__) . '/persistencia/Conexion.php');
-require_once (dirname(__DIR__) . '/persistencia/CategoriaDAO.php');
+require_once ("./persistencia/Conexion.php");
+require ("./persistencia/CategoriaDAO.php");
 
 class Categoria{
     private $idCategoria;
@@ -13,9 +13,11 @@ class Categoria{
     public function getNombre() {
         return $this->nombre;
     }
+
     public function setIdProducto($idCategoria){
         $this->idCategoria = $idCategoria;
     }
+
     public function setNombre($nombre){
         $this->nombre = $nombre;
     }
@@ -25,15 +27,13 @@ class Categoria{
         $this -> nombre = $nombre;
     }
     
-
-    public function consultarCategoria(){
-        //Consulta a la base de datos para obtener la marca por id
+    public function consultarTodos(){
         $categorias = array();
         $conexion = new Conexion();
         $conexion -> abrirConexion();
         $categoriaDAO = new CategoriaDAO();
-        $conexion -> ejecutarConsulta($categoriaDAO -> consultarCategoria());
-        while($registro = $conexion ->siguienteRegistro()){
+        $conexion -> ejecutarConsulta($categoriaDAO -> consultarTodos());
+        while($registro = $conexion -> siguienteRegistro()){
             $categoria = new Categoria($registro[0], $registro[1]);
             array_push($categorias, $categoria);
         }

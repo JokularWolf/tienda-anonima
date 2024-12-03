@@ -1,6 +1,7 @@
 <?php
-require_once (dirname(__DIR__) . '/persistencia/MarcaDAO.php');
-require_once (dirname(__DIR__) . '/logica/Producto.php');
+require_once ("./persistencia/Conexion.php");
+require ("./persistencia/MarcaDAO.php");
+
 class Marca{
     private $idMarca;
     private $nombre;
@@ -26,12 +27,12 @@ class Marca{
         $this -> nombre = $nombre;
     }
     
-    public function consultarMarca(){
+    public function consultarTodos(){
         $marcas = array();
         $conexion = new Conexion();
         $conexion -> abrirConexion();
         $marcaDAO = new MarcaDAO();
-        $conexion -> ejecutarConsulta($marcaDAO -> consultarMarca());
+        $conexion -> ejecutarConsulta($marcaDAO -> consultarTodos());
         while($registro = $conexion -> siguienteRegistro()){
             $marca = new Marca($registro[0], $registro[1]);
             array_push($marcas, $marca);
@@ -40,20 +41,15 @@ class Marca{
         return $marcas;        
     }
     
-    public function consultarPorMarca($idMarca) {
-        $productos = array(); 
+    public function consultar(){
         $conexion = new Conexion();
-        $conexion->abrirConexion();
-        $marcaDAO = new MarcaDAO();
-        $conexion->ejecutarConsulta($marcaDAO->consultarProductosPorMarca($idMarca));
-    
-        while ($registro = $conexion->siguienteRegistro()) {
-            $producto = new Producto(0, $registro[0], $registro[1], 0, $registro[2]);
-            array_push($productos, $producto);
-        }
-        $conexion->cerrarConexion();
-        return $productos;
-    }
+        $conexion -> abrirConexion();
+        $marcaDAO = new MarcaDAO($this -> idMarca);
+        $conexion -> ejecutarConsulta($marcaDAO -> consultar());
+        $registro = $conexion -> siguienteRegistro();
+        $this -> nombre = $registro[0];
+        $conexion -> cerrarConexion();
+    }    
 }
 
 ?>

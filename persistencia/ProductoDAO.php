@@ -14,14 +14,16 @@ class ProductoDAO{
         $this -> precioVenta = $precioVenta;
     }
     
-    public function consultarProductos() {
-        return "SELECT p.idProducto, p.nombre, p.cantidad, p.precioCompra, p.precioVenta,
-                       m.idMarca, m.nombre, 
-                       c.idCategoria, c.nombre
-                FROM producto p
-                INNER JOIN marca m ON p.Marca_idMarca = m.idMarca
-                INNER JOIN categoria c ON p.Categoria_idCategoria = c.idCategoria";
-    } 
+    public function consultarTodos(){
+        return "select idProducto, nombre, cantidad, precioCompra, precioVenta, Marca_idMarca 
+                from Producto";
+    }
+    
+    public function buscar($filtro){
+        return "select idProducto, nombre, cantidad, precioCompra, precioVenta, Marca_idMarca
+                from Producto
+                where nombre like '%" . $filtro . "%'";
+    }
 }
 
 ?>

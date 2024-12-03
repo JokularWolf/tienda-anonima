@@ -1,106 +1,58 @@
 <?php
+session_start();
+if(isset($_GET["cerrarSesion"])){
+    session_destroy();
+}
 require ("logica/Producto.php");
 require ("logica/Categoria.php");
 require ("logica/Marca.php");
+require ("logica/Persona.php");
+require ("logica/Administrador.php");
+require ("logica/Cliente.php");
+
+$paginasSinSesion = array(
+    "presentacion/iniciarSesion.php",
+    "presentacion/cliente/registrarCliente.php",
+    "presentacion/sinPermiso.php",
+);
+
+$paginasConSesion = array(
+    "presentacion/sesionAdministrador.php",
+    "presentacion/sesionCliente.php",
+    "presentacion/producto/buscarProducto.php",
+    "presentacion/cliente/buscarCliente.php"
+);
+
 ?>
 <html>
 <head>
-<link
-	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-	rel="stylesheet">
-<script
-	src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
+<!-- <script src="presentacion/js/cliente.js"></script> -->
 </head>
 <body>
-	<div class="container">
-		<div class="row">
-			<div class="col text-center mt-2">
-				<img src="img/logo.png" height="150" />
-			</div>
-		</div>
-	</div>
+<?php 
+if(!isset($_GET["pid"])){
+    include ("presentacion/encabezado.php");
+    include ("presentacion/menu.php");
+    include ("presentacion/producto/consultaProductoInicio.php");    
+}else{
+    $pid = base64_decode($_GET["pid"]);
+    if(in_array($pid, $paginasSinSesion)){
+        include ($pid);
+    }else if(in_array($pid, $paginasConSesion)){
+        if(isset($_SESSION["id"])){
+            include ($pid);
+        }else{
+            include ("presentacion/iniciarSesion.php");
+        }
+    }else{
+        echo "<h1>Error 404</h1>";        
+    }
+}
 
-	<nav class="navbar navbar-expand-lg bg-body-tertiary">
-		<div class="container">
-			<a class="navbar-brand" href="#"><img src="img/logo2.png" width="50" /></a>
-			<button class="navbar-toggler" type="button"
-				data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
-				aria-controls="navbarNavDropdown" aria-expanded="false"
-				aria-label="Toggle navigation">
-				<span class="navbar-toggler-icon"></span>
-			</button>
-			<div class="collapse navbar-collapse" id="navbarNavDropdown">
-				<ul class="navbar-nav">
-					<li class="nav-item dropdown"><a class="nav-link dropdown-toggle"
-						href="#" role="button" data-bs-toggle="dropdown"
-						aria-expanded="false">Marca</a>
-						<ul class="dropdown-menu">
-                            <?php 
-                            $marca = new Marca();
-                            $marcas = $marca -> consultarMarca();
-                            foreach ($marcas as $marcaActual) {
-								echo "<li><a class='dropdown-item' href='modulos/Mmarca.php?idMarca=" . $marcaActual->getIdMarca() . "'>" . $marcaActual->getNombre() . "</a></li>";
-                            }
-                            ?>
-						</ul></li>
-				</ul>
-				<ul class="navbar-nav">
-					<li class="nav-item dropdown"><a class="nav-link dropdown-toggle"
-						href="#" role="button" data-bs-toggle="dropdown"
-						aria-expanded="false">Categoria</a>
-						<ul class="dropdown-menu">
-                            <?php 
-                            $categoria = new Categoria();
-                            $categorias = $categoria -> consultarCategoria();
-                            foreach ($categorias as $categoriaActual) {
-                                echo "<li><a class='dropdown-item' href='#'>" . $categoriaActual -> getNombre() . "</a></li>"; 
-                            }
-                            ?>
-						</ul></li>
-				</ul>
-			</div>
-		</div>
-	</nav>
-	<div class="container">
-		<div class="row mb-3">
-			<div class="col">
-				<div class="card border-primary">
-					<div class="card-header text-bg-info">Tienda Anonima</div>
-					<div class="card-body">
-    					<?php
-    					$i=0;
-                        $producto = new Producto();
-                        $productos = $producto->consultarProductos();
-                        foreach ($productos as $productoActual) {
-                            if($i%4 == 0){
-                                echo "<div class='row mb-3'>";
-                            }
-                            echo "<div class='col-lg-3 col-md-4 col-sm-6' >";
-                            echo "<div class='card text-bg-light'>";
-                            echo "<div class='card-body'>";
-                            echo "<div class='text-center'><img src='https://icons.iconarchive.com/icons/custom-icon-design/mono-general-1/256/faq-icon.png' width='70%' /></div>";
-                            echo "<a href='#'>" . $productoActual->getNombre() . "</a><br>";
-                            echo "Cantidad: " . $productoActual->getCantidad() . "<br>";
-                            echo "Valor: $" . $productoActual->getPrecioVenta(). "<br>";
-							echo "Marca: " . $productoActual->getMarca()->getNombre() . "<br>";
-    						echo "Categoría: " . $productoActual->getCategoria()->getNombre() . "<br>";
-                            echo "</div>";
-                            echo "</div>";
-                            echo "</div>";
-                            
-                            if($i%4 == 3){
-                                echo "</div>";
-                            }
-                            $i++;
-                        }
-                        if($i%4 != 0){
-                            echo "</div>";
-                        }
-                        ?>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
+?>
 </body>
 </html>
